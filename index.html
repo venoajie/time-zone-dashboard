@@ -4,121 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Off-Peak Discount Dashboard</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="dashboard">
-        <!-- Header with current time -->
-        <div class="current-time-header">
-            <div class="time-indicator">
-                <div class="current-time-badge">
-                    <span id="current-time-display">9:36 am</span>
-                    <span class="day-indicator">Friday</span>
+        <header>
+            <h1>🌐 Global Off-Peak Discount Windows</h1>
+            <div class="current-utc">UTC: <span id="utc-time"></span></div>
+        </header>
+
+        <div class="regions-container">
+            <!-- Asia Region -->
+            <div class="region-card" data-region="asia">
+                <div class="region-header">
+                    <h3>🌏 Asia (SG/ID/TH)</h3>
+                    <div class="local-time" data-timezone="Asia/Singapore"></div>
                 </div>
+                <div class="discount-window">
+                    <div class="window-info">
+                        <span class="hours">12 AM – 8 AM</span>
+                        <span class="utc-equiv">(16:00–00:00 UTC prev. day)</span>
+                    </div>
+                    <div class="status-indicator" id="asia-status"></div>
+                </div>
+                <div class="countdown" id="asia-countdown"></div>
+            </div>
+
+            <!-- US East Region -->
+            <div class="region-card" data-region="us-east">
+                <div class="region-header">
+                    <h3>🇺🇸 US East</h3>
+                    <div class="local-time" data-timezone="America/New_York"></div>
+                </div>
+                <div class="discount-window">
+                    <div class="window-info">
+                        <span class="hours">8 PM – 4 AM</span>
+                        <span class="utc-equiv">(01:00–09:00 UTC)</span>
+                    </div>
+                    <div class="status-indicator" id="us-status"></div>
+                </div>
+                <div class="countdown" id="us-countdown"></div>
+            </div>
+
+            <!-- Europe Region -->
+            <div class="region-card" data-region="europe">
+                <div class="region-header">
+                    <h3>🇪🇺 Europe</h3>
+                    <div class="local-time" data-timezone="Europe/Berlin"></div>
+                </div>
+                <div class="discount-window">
+                    <div class="window-info">
+                        <span class="hours">1 AM – 9 AM</span>
+                        <span class="utc-equiv">(00:00–08:00 UTC)</span>
+                    </div>
+                    <div class="status-indicator" id="europe-status"></div>
+                </div>
+                <div class="countdown" id="europe-countdown"></div>
             </div>
         </div>
 
-        <!-- Timezone Selector -->
-        <div class="timezone-selector">
-            <div class="timezone-dropdown">
-                <span class="timezone-label">TIMEZONE</span>
-                <div class="selected-timezone">
-                    <span>Jakarta (GMT +7)</span>
-                    <span class="dropdown-arrow">▼</span>
+        <!-- Timeline Visualization -->
+        <div class="timeline-container">
+            <h3>24-Hour UTC Timeline</h3>
+            <div class="timeline">
+                <div class="timeline-hours"></div>
+                <div class="timeline-bars">
+                    <div class="timeline-bar" id="asia-bar" data-region="asia"></div>
+                    <div class="timeline-bar" id="europe-bar" data-region="europe"></div>
+                    <div class="timeline-bar" id="us-bar" data-region="us-east"></div>
                 </div>
+                <div class="current-time-marker" id="timeline-marker"></div>
             </div>
         </div>
 
-        <!-- Main Content: Table + Timeline -->
-        <div class="main-content">
-            <!-- Left Panel: Regions Table -->
-            <div class="regions-table">
-                <div class="region-row" data-region="jakarta">
-                    <div class="region-info">
-                        <div class="flag">🇮🇩</div>
-                        <div class="city-details">
-                            <div class="city-name">Jakarta</div>
-                            <div class="local-time" id="jakarta-time">9:36 am</div>
-                            <div class="date-info">Fri Aug. 8th WIB (UTC +7)</div>
-                        </div>
-                    </div>
-                    <div class="session-status" id="jakarta-status">
-                        <span class="status-text">JAKARTA DISCOUNT CLOSED</span>
-                    </div>
-                </div>
-
-                <div class="region-row" data-region="london">
-                    <div class="region-info">
-                        <div class="flag">🇬🇧</div>
-                        <div class="city-details">
-                            <div class="city-name">London</div>
-                            <div class="local-time" id="london-time">3:36 am</div>
-                            <div class="date-info">Fri Aug. 8th BST (UTC +1)</div>
-                        </div>
-                    </div>
-                    <div class="session-status" id="london-status">
-                        <span class="status-text">LONDON DISCOUNT OPEN</span>
-                    </div>
-                </div>
-
-                <div class="region-row" data-region="newyork">
-                    <div class="region-info">
-                        <div class="flag">🇺🇸</div>
-                        <div class="city-details">
-                            <div class="city-name">New York</div>
-                            <div class="local-time" id="newyork-time">10:36 pm</div>
-                            <div class="date-info">Thu Aug. 7th EDT (UTC -4)</div>
-                        </div>
-                    </div>
-                    <div class="session-status" id="newyork-status">
-                        <span class="status-text">NEW YORK DISCOUNT OPEN</span>
-                    </div>
-                </div>
-            </div>
-            <!-- Right Panel: Timeline -->
-            <div class="timeline-panel">
-                <!-- Hour markers -->
-                <div class="hour-markers">
-                    <div class="hour-numbers">
-                        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
-                        <span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span>
-                        <span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17</span>
-                        <span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span>
-                    </div>
-                </div>
-
-                <!-- Timeline bars -->
-                <div class="timeline-container">        
-                    <div class="timeline-bar jakarta-bar inactive" id="jakarta-timeline" data-label="JKT"></div>
-                    <div class="timeline-bar london-bar active" id="london-timeline" data-label="LON"></div>
-                    <div class="timeline-bar newyork-bar active" id="newyork-timeline" data-label="NYC"></div>
-                    
-                    <!-- Current time marker -->
-                    <div class="current-time-marker" id="time-marker"></div>
-                </div>
-            </div>
-
-        <!-- Bottom Info -->
-        <div class="bottom-info">
-            <div class="trading-info">
-                <span class="info-icon">📊</span>
-                <span>Discount availability is usually optimal at this time of day.</span>
-            </div>
-            <div class="status-indicators">
-                <div class="status-legend">
-                    <span class="legend-item">
-                        <span class="color-dot active"></span>
-                        <span>Active</span>
-                    </span>
-                    <span class="legend-item">
-                        <span class="color-dot inactive"></span>
-                        <span>Inactive</span>
-                    </span>
-                </div>
-            </div>
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button class="action-btn" onclick="refreshData()">🔄 Refresh</button>
+            <button class="action-btn" onclick="toggleNotifications()">🔔 Notifications</button>
+            <div class="next-opportunity" id="next-opportunity"></div>
         </div>
     </div>
 
-    <script src="js/script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
