@@ -185,6 +185,7 @@ body {
 }
 
 /* Timeline Panel */
+/* Timeline Panel */
 .timeline-panel {
     flex: 1.2;
     padding: 20px 30px 20px 0;
@@ -199,57 +200,103 @@ body {
 .hour-numbers {
     display: flex;
     justify-content: space-between;
-    padding: 0 10px;
-    font-size: 0.75em;
+    padding: 0 5px;
+    font-size: 0.7em;
     color: #64748b;
     font-weight: 500;
+    font-family: monospace;
+}
+
+.hour-numbers span {
+    flex: 1;
+    text-align: center;
+    min-width: 0;
 }
 
 .timeline-container {
     position: relative;
-    height: 240px;
+    height: 200px;
     background: #e2e8f0;
     border-radius: 8px;
     padding: 10px;
+    margin-top: 10px;
 }
 
 .timeline-bar {
     position: absolute;
-    height: 20px;
-    border-radius: 10px;
-    margin: 5px 0;
+    height: 25px;
+    border-radius: 12px;
+    margin: 0;
+    transition: all 0.3s ease;
 }
 
+/* Jakarta bar - RED when inactive */
 .jakarta-bar {
     top: 20px;
+    left: 66.7%; /* 16/24 * 100% = 66.7% */
+    width: 20.8%; /* 5 hours: (24-16+1)/24 * 100% = 37.5% */
     background: #dc2626;
-    opacity: 0.3; /* Inactive */
+    opacity: 0.4;
 }
 
+/* London bar - GREEN when active */
 .london-bar {
     top: 60px;
+    left: 0%; /* 0/24 * 100% = 0% */
+    width: 33.3%; /* 8 hours: 8/24 * 100% = 33.3% */
     background: #16a34a;
-    opacity: 1; /* Active */
-    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
+    opacity: 1;
+    box-shadow: 0 3px 12px rgba(22, 163, 74, 0.4);
 }
 
+/* New York bar - GREEN when active */
 .newyork-bar {
     top: 100px;
+    left: 4.2%; /* 1/24 * 100% = 4.2% */
+    width: 33.3%; /* 8 hours: 8/24 * 100% = 33.3% */
     background: #16a34a;
-    opacity: 1; /* Active */
-    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
+    opacity: 1;
+    box-shadow: 0 3px 12px rgba(22, 163, 74, 0.4);
+}
+
+/* Active state styling */
+.timeline-bar.active {
+    opacity: 1 !important;
+    background: #16a34a !important;
+    box-shadow: 0 3px 12px rgba(22, 163, 74, 0.4) !important;
+}
+
+/* Inactive state styling */
+.timeline-bar.inactive {
+    opacity: 0.4 !important;
+    background: #dc2626 !important;
+    box-shadow: none !important;
 }
 
 .current-time-marker {
     position: absolute;
     width: 3px;
-    height: 180px;
+    height: 160px;
     background: #8b5cf6;
     border-radius: 2px;
     top: 10px;
-    z-index: 10;
-    box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+    z-index: 20;
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.6);
 }
+
+/* Add labels for bars */
+.timeline-bar::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.7em;
+    font-weight: 600;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
 
 /* Bottom Info */
 .bottom-info {
