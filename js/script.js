@@ -1,198 +1,127 @@
-// Discount window configurations focused on Jakarta
-const discountWindows = {
-    jakarta: {
-        name: "Jakarta",
-        timezone: "Asia/Jakarta",
-        utcStart: 16, // 16:00 UTC = 11 PM Jakarta (next day)
-        utcEnd: 1,    // 01:00 UTC = 8 AM Jakarta (next day)
-        localStart: "11:00 PM",
-        localEnd: "8:00 AM"
-    },
-    london: {
-        name: "London", 
-        timezone: "Europe/London",
-        utcStart: 0,  // 00:00 UTC = 1 AM London
-        utcEnd: 8,    // 08:00 UTC = 9 AM London
-        localStart: "1:00 AM",
-        localEnd: "9:00 AM"
-    },
-    newyork: {
-        name: "New York",
-        timezone: "America/New_York",
-        utcStart: 1,  // 01:00 UTC = 9 PM NY (previous day)
-        utcEnd: 9,    // 09:00 UTC = 5 AM NY
-        localStart: "9:00 PM",
-        localEnd: "5:00 AM"
-    }
-};
-
-function updateCurrentTime() {
+// Simple time update function that definitely works
+function updateTime() {
     const now = new Date();
     
-    // Update header time (Jakarta time)
-    const jakartaTime = new Intl.DateTimeFormat('en-US', {
+    // Jakarta time for header
+    const jakartaOptions = {
         timeZone: 'Asia/Jakarta',
         hour: 'numeric',
         minute: '2-digit',
         hour12: true
-    }).format(now);
+    };
+    const jakartaTime = now.toLocaleString('en-US', jakartaOptions);
     
-    const jakartaDay = new Intl.DateTimeFormat('en-US', {
+    // Update header time
+    const headerTime = document.getElementById('current-time-display');
+    if (headerTime) {
+        headerTime.textContent = jakartaTime;
+    }
+    
+    // Update day
+    const dayOptions = {
         timeZone: 'Asia/Jakarta',
         weekday: 'long'
-    }).format(now);
+    };
+    const jakartaDay = now.toLocaleString('en-US', dayOptions);
+    const dayElement = document.querySelector('.day-indicator');
+    if (dayElement) {
+        dayElement.textContent = jakartaDay;
+    }
     
-    document.getElementById('current-time-display').textContent = jakartaTime;
-    document.querySelector('.day-indicator').textContent = jakartaDay;
-}
-
-function updateRegionTimes() {
-    const now = new Date();
+    // Update Jakarta time in table
+    const jakartaTableTime = document.getElementById('jakarta-time');
+    if (jakartaTableTime) {
+        jakartaTableTime.textContent = jakartaTime;
+    }
     
-    // Jakarta
-    const jakartaTime = new Intl.DateTimeFormat('en-US', {
-        timeZone: 'Asia/Jakarta',
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-    }).format(now);
-    document.getElementById('jakarta-time').textContent = jakartaTime;
-    
-    // London
-    const londonTime = new Intl.DateTimeFormat('en-US', {
+    // Update London time
+    const londonOptions = {
         timeZone: 'Europe/London',
         hour: 'numeric',
         minute: '2-digit',
         hour12: true
-    }).format(now);
-    document.getElementById('london-time').textContent = londonTime;
+    };
+    const londonTime = now.toLocaleString('en-US', londonOptions);
+    const londonTableTime = document.getElementById('london-time');
+    if (londonTableTime) {
+        londonTableTime.textContent = londonTime;
+    }
     
-    // New York
-    const nyTime = new Intl.DateTimeFormat('en-US', {
+    // Update New York time
+    const nyOptions = {
         timeZone: 'America/New_York',
         hour: 'numeric',
         minute: '2-digit',
         hour12: true
-    }).format(now);
-    document.getElementById('newyork-time').textContent = nyTime;
-}
-
-function isDiscountActive(region) {
-    const now = new Date();
-    const utcHour = now.getUTCHours();
-    const window = discountWindows[region];
-    
-    if (window.utcEnd < window.utcStart) {
-        // Window crosses midnight UTC (like Jakarta and NY)
-        return utcHour >= window.utcStart || utcHour < window.utcEnd;
-    } else {
-        // Normal window (like London)
-        return utcHour >= window.utcStart && utcHour < window.utcEnd;
+    };
+    const nyTime = now.toLocaleString('en-US', nyOptions);
+    const nyTableTime = document.getElementById('newyork-time');
+    if (nyTableTime) {
+        nyTableTime.textContent = nyTime;
     }
+    
+    // Update discount status
+    updateStatus();
+    
+    // Console log for debugging
+    console.log('Time updated:', jakartaTime);
 }
 
-function updateDiscountStatus() {
-    Object.keys(discountWindows).forEach(region => {
-        const statusElement = document.getElementById(`${region}-status`);
-        const isActive = isDiscountActive(region);
-        const regionName = discountWindows[region].name.toUpperCase();
-        
-        const statusText = isActive 
-            ? `${regionName} DISCOUNT OPEN`
-            : `${regionName} DISCOUNT CLOSED`;
-            
-        if (statusElement && statusElement.querySelector('.status-text')) {
-            statusElement.querySelector('.status-text').textContent = statusText;
-        }
-        
-        // Update visual styling based on current status
-        const regionRow = document.querySelector(`[data-region="${region}"]`);
-        if (regionRow) {
-            const statusDiv = regionRow.querySelector('.session-status');
-            statusDiv.className = 'session-status';
-            
-            if (isActive) {
-                statusDiv.classList.add('status-active');
-            } else {
-                statusDiv.classList.add('status-inactive');
-            }
-        }
-    });
-}
-
-function updateTimeline() {
+function updateStatus() {
     const now = new Date();
     const utcHour = now.getUTCHours();
-    const utcMinute = now.getUTCMinutes();
     
-    // Update current time marker position (24-hour format)
+    // Jakarta: 16:00-01:00 UTC (11 PM - 8 AM Jakarta time)
+    const jakartaActive = utcHour >= 16 || utcHour < 1;
+    
+    // London: 00:00-08:00 UTC (1 AM - 9 AM London time)  
+    const londonActive = utcHour >= 0 && utcHour < 8;
+    
+    // New York: 01:00-09:00 UTC (9 PM - 5 AM NY time)
+    const nyActive = utcHour >= 1 && utcHour < 9;
+    
+    // Update Jakarta status
+    const jakartaStatus = document.getElementById('jakarta-status');
+    if (jakartaStatus) {
+        const statusText = jakartaActive ? 'JAKARTA DISCOUNT OPEN' : 'JAKARTA DISCOUNT CLOSED';
+        jakartaStatus.querySelector('.status-text').textContent = statusText;
+        jakartaStatus.className = jakartaActive ? 'session-status status-active' : 'session-status status-inactive';
+    }
+    
+    // Update London status
+    const londonStatus = document.getElementById('london-status');
+    if (londonStatus) {
+        const statusText = londonActive ? 'LONDON DISCOUNT OPEN' : 'LONDON DISCOUNT CLOSED';
+        londonStatus.querySelector('.status-text').textContent = statusText;
+        londonStatus.className = londonActive ? 'session-status status-active' : 'session-status status-inactive';
+    }
+    
+    // Update New York status
+    const nyStatus = document.getElementById('newyork-status');
+    if (nyStatus) {
+        const statusText = nyActive ? 'NEW YORK DISCOUNT OPEN' : 'NEW YORK DISCOUNT CLOSED';
+        nyStatus.querySelector('.status-text').textContent = statusText;
+        nyStatus.className = nyActive ? 'session-status status-active' : 'session-status status-inactive';
+    }
+    
+    // Update timeline marker
+    const utcMinute = now.getUTCMinutes();
     const markerPosition = ((utcHour * 60 + utcMinute) / (24 * 60)) * 100;
     const marker = document.getElementById('time-marker');
     if (marker) {
         marker.style.left = `${markerPosition}%`;
     }
     
-    // Update timeline bars for each region
-    Object.keys(discountWindows).forEach(region => {
-        const bar = document.getElementById(`${region}-timeline`);
-        if (!bar) return;
-        
-        const window = discountWindows[region];
-        let startPercent, widthPercent;
-        
-        if (window.utcEnd < window.utcStart) {
-            // Window crosses midnight (Jakarta: 16-24 + 0-1, NY: 1-9)
-            if (region === 'jakarta') {
-                // Jakarta: 16:00-00:00 UTC (8 hours)
-                startPercent = (16 / 24) * 100;
-                widthPercent = (8 / 24) * 100;
-            } else if (region === 'newyork') {
-                // NY: 01:00-09:00 UTC (8 hours) 
-                startPercent = (1 / 24) * 100;
-                widthPercent = (8 / 24) * 100;
-            }
-        } else {
-            // London: 00:00-08:00 UTC (8 hours)
-            startPercent = (window.utcStart / 24) * 100;
-            widthPercent = ((window.utcEnd - window.utcStart) / 24) * 100;
-        }
-        
-        bar.style.left = `${startPercent}%`;
-        bar.style.width = `${widthPercent}%`;
-        
-        // Update opacity based on active status
-        if (isDiscountActive(region)) {
-            bar.style.opacity = '1';
-            bar.style.boxShadow = '0 2px 8px rgba(22, 163, 74, 0.3)';
-        } else {
-            bar.style.opacity = '0.3';
-            bar.style.boxShadow = 'none';
-        }
-    });
+    console.log(`UTC: ${utcHour}:${utcMinute} | Jakarta: ${jakartaActive} | London: ${londonActive} | NY: ${nyActive}`);
 }
 
-function updateAll() {
-    updateCurrentTime();
-    updateRegionTimes();
-    updateDiscountStatus();
-    updateTimeline();
-    
-    // Debug log
-    console.log('Dashboard updated:', new Date().toISOString());
-}
+// Start immediately when script loads
+console.log('Starting dashboard...');
+updateTime();
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Dashboard initializing...');
-    updateAll();
-    
-    // Update every second
-    setInterval(updateAll, 1000);
-});
+// Update every 1 second
+setInterval(updateTime, 1000);
 
-// Fallback initialization
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', updateAll);
-} else {
-    updateAll();
-}
+// Also update when page loads
+window.addEventListener('load', updateTime);
+document.addEventListener('DOMContentLoaded', updateTime);
