@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Off-Peak Discount Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Header with current time -->
+        <div class="current-time-header">
+            <div class="time-indicator">
+                <div class="current-time-badge">
+                    <span id="current-time-display">9:36 am</span>
+                    <span class="day-indicator">Friday</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timezone Selector -->
+        <div class="timezone-selector">
+            <div class="timezone-dropdown">
+                <span class="timezone-label">TIMEZONE</span>
+                <div class="selected-timezone">
+                    <span>Jakarta (GMT +7)</span>
+                    <span class="dropdown-arrow">▼</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content: Table + Timeline -->
+        <div class="main-content">
+            <!-- Left Panel: Regions Table -->
+            <div class="regions-table">
+                <div class="region-row" data-region="jakarta">
+                    <div class="region-info">
+                        <div class="flag">🇮🇩</div>
+                        <div class="city-details">
+                            <div class="city-name">Jakarta</div>
+                            <div class="local-time" id="jakarta-time">9:36 am</div>
+                            <div class="date-info">Fri Aug. 8th WIB (UTC +7)</div>
+                        </div>
+                    </div>
+                    <div class="session-status" id="jakarta-status">
+                        <span class="status-text">JAKARTA DISCOUNT CLOSED</span>
+                    </div>
+                </div>
+
+                <div class="region-row" data-region="london">
+                    <div class="region-info">
+                        <div class="flag">🇬🇧</div>
+                        <div class="city-details">
+                            <div class="city-name">London</div>
+                            <div class="local-time" id="london-time">3:36 am</div>
+                            <div class="date-info">Fri Aug. 8th BST (UTC +1)</div>
+                        </div>
+                    </div>
+                    <div class="session-status" id="london-status">
+                        <span class="status-text">LONDON DISCOUNT OPEN</span>
+                    </div>
+                </div>
+
+                <div class="region-row" data-region="newyork">
+                    <div class="region-info">
+                        <div class="flag">🇺🇸</div>
+                        <div class="city-details">
+                            <div class="city-name">New York</div>
+                            <div class="local-time" id="newyork-time">10:36 pm</div>
+                            <div class="date-info">Thu Aug. 7th EDT (UTC -4)</div>
+                        </div>
+                    </div>
+                    <div class="session-status" id="newyork-status">
+                        <span class="status-text">NEW YORK DISCOUNT OPEN</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Timeline -->
+            <div class="timeline-panel">
+                <!-- Hour markers -->
+                <div class="hour-markers">
+                    <div class="hour-numbers">
+                        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span>
+                        <span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span>
+                        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span>
+                        <span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span>
+                    </div>
+                </div>
+
+                <!-- Timeline bars -->
+                <div class="timeline-container">
+                    <div class="timeline-bar jakarta-bar" id="jakarta-timeline"></div>
+                    <div class="timeline-bar london-bar" id="london-timeline"></div>
+                    <div class="timeline-bar newyork-bar" id="newyork-timeline"></div>
+                    
+                    <!-- Current time marker -->
+                    <div class="current-time-marker" id="time-marker"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Info -->
+        <div class="bottom-info">
+            <div class="trading-info">
+                <span class="info-icon">📊</span>
+                <span>Discount availability is usually optimal at this time of day.</span>
+            </div>
+            <div class="status-indicators">
+                <div class="status-legend">
+                    <span class="legend-item">
+                        <span class="color-dot active"></span>
+                        <span>Active</span>
+                    </span>
+                    <span class="legend-item">
+                        <span class="color-dot inactive"></span>
+                        <span>Inactive</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
