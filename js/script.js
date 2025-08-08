@@ -60,8 +60,9 @@ function updateTime() {
         nyTableTime.textContent = nyTime;
     }
     
-    // Update discount status
+    // Update discount status and timeline
     updateStatus();
+    updateTimeline();
     
     // Console log for debugging
     console.log('Time updated:', jakartaTime);
@@ -104,15 +105,47 @@ function updateStatus() {
         nyStatus.className = nyActive ? 'session-status status-active' : 'session-status status-inactive';
     }
     
-    // Update timeline marker
+    console.log(`UTC: ${utcHour}:${utcMinute} | Jakarta: ${jakartaActive} | London: ${londonActive} | NY: ${nyActive}`);
+}
+
+function updateTimeline() {
+    const now = new Date();
+    const utcHour = now.getUTCHours();
     const utcMinute = now.getUTCMinutes();
+    
+    // Update current time marker position
     const markerPosition = ((utcHour * 60 + utcMinute) / (24 * 60)) * 100;
     const marker = document.getElementById('time-marker');
     if (marker) {
         marker.style.left = `${markerPosition}%`;
+        console.log(`Marker position: ${markerPosition}%`);
     }
     
-    console.log(`UTC: ${utcHour}:${utcMinute} | Jakarta: ${jakartaActive} | London: ${londonActive} | NY: ${nyActive}`);
+    // Update bar states based on current UTC time
+    const jakartaActive = utcHour >= 16 || utcHour < 1;
+    const londonActive = utcHour >= 0 && utcHour < 8;
+    const nyActive = utcHour >= 1 && utcHour < 9;
+    
+    // Jakarta bar
+    const jakartaBar = document.getElementById('jakarta-timeline');
+    if (jakartaBar) {
+        jakartaBar.className = jakartaActive ? 'timeline-bar jakarta-bar active' : 'timeline-bar jakarta-bar inactive';
+        console.log('Jakarta bar updated:', jakartaActive);
+    }
+    
+    // London bar  
+    const londonBar = document.getElementById('london-timeline');
+    if (londonBar) {
+        londonBar.className = londonActive ? 'timeline-bar london-bar active' : 'timeline-bar london-bar inactive';
+        console.log('London bar updated:', londonActive);
+    }
+    
+    // New York bar
+    const nyBar = document.getElementById('newyork-timeline');
+    if (nyBar) {
+        nyBar.className = nyActive ? 'timeline-bar newyork-bar active' : 'timeline-bar newyork-bar inactive';
+        console.log('NY bar updated:', nyActive);
+    }
 }
 
 // Start immediately when script loads
