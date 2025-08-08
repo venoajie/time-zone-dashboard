@@ -382,19 +382,3 @@ body {
     color: #dc2626 !important;
     border: 1px solid #fca5a5 !important;
 }
-
-.hour-numbers {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 5px;
-    font-size: 0.7em;
-    color: #64748b;
-    font-weight: 500;
-    font-family: monospace; /* Better number alignment */
-}
-
-.hour-numbers span {
-    flex: 1;
-    text-align: center;
-    min-width: 0;
-}
